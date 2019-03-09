@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MarsRover</string>
+    <string name="title_activity_main">RoverActivity</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+    <string name="nav_header_title">NASA Mars Rovers</string>
+    <string name="nav_header_subtitle">Guus Lieben - 23IVT1D1</string>
+</resources>

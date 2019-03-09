@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:checkableBehavior="single"
+        android:title="Rovers">
+        <item
+            android:id="@+id/nav_curiosity"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Curiosity" />
+        <item
+            android:id="@+id/nav_opportunity"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Opportunity" />
+        <item
+            android:id="@+id/nav_spirit"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Spirit" />
+    </group>
+
+</menu>
