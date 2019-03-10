@@ -1,0 +1,16 @@
+
+Ksquid:S1066/"/Merge this if statement with the enclosing one.(£ä”øÿÿÿÿ
+csquid:S11926"GDefine a constant instead of duplicating this literal "NAVCAM" 3 times.(Å¦Ã‹şÿÿÿÿ
+`squid:HiddenFieldCheck@"9Rename "rover" which hides the field declared at line 34.(ı²Ú±ÿÿÿÿÿ
+isquid:S00117C"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‚Ê¢
+Zsquid:S1155/">Use isEmpty() to check whether the collection is empty or not.(£ä”øÿÿÿÿ
+rsquid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(õÑÎÔ
+{squid:S1488†"^Immediately return this expression instead of assigning it to the temporary variable "parent".(”ÂŠÿÿÿÿÿ
+Msquid:S2696-"6Make the enclosing method "static" or remove this set.(¾Äà³
+Zsquid:S2259."CA "NullPointerException" could be thrown; "rover" is nullable here.(ÀøËÀ
+Usquid:S1155.">Use isEmpty() to check whether the collection is empty or not.(ÀøËÀ
+qsquid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¾°m
+nsquid:S00117a"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(»áŠ±üÿÿÿÿ
+Fsquid:S2093t"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ
+|squid:S1149‚"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(¨âàøÿÿÿÿ
+wsquid:S00115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ºÔĞ°üÿÿÿÿ

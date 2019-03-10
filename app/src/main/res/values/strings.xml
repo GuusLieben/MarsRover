@@ -5,4 +5,6 @@
     <string name="navigation_drawer_close">Close</string>
     <string name="nav_header_title">NASA Mars Rovers</string>
     <string name="nav_header_subtitle">Guus Lieben - 23IVT1D1</string>
+    <string name="preffered_rover_key">rover</string>
+    <string name="rover_curiosity">Curiosity</string>
 </resources>

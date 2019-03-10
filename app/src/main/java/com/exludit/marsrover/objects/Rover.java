@@ -3,29 +3,30 @@ package com.exludit.marsrover.objects;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoverObject {
+public class Rover {
 
-    private static List<RoverObject> rovers = new ArrayList<>();
+    private static List<Rover> rovers = new ArrayList<>();
 
     private String name;
     private int maxSol;
     private String[] cameras;
     private List<RoverPhoto> photos;
 
-    public RoverObject(String name, String[] cameras) {
+    public Rover(String name, String[] cameras) {
         this.name = name;
         this.cameras = cameras;
         this.photos = new ArrayList<>();
         rovers.add(this);
     }
 
-    public static RoverObject getByName(String roverObjectName) {
-        for (int i=0; i<rovers.size(); i++) {
-            RoverObject object = rovers.get(i);
-            if (object.getName().toLowerCase().equals(roverObjectName.toLowerCase())) return object;
+    public static Rover getByName(String roverObjectName) {
+        int i = 0;
+        while (i < rovers.size()) {
+            Rover object = rovers.get(i);
+            if (object.getName().equalsIgnoreCase(roverObjectName)) return object;
+            i++;
         }
         return rovers.get(0);
-//        return rovers.stream().filter(rover -> rover.getName().toLowerCase().equals(roverObjectName.toLowerCase())).findFirst().orElse(rovers.get(0));
     }
 
     public String getName() {

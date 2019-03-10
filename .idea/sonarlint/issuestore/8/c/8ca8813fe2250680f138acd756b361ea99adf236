@@ -1,0 +1,11 @@
+
+ssquid:S1450"\Remove the "layoutManager" field and declare it as a local variable in the relevant methods.(üÉÙ¼
+]squid:S1192F"FDefine a constant instead of duplicating this literal "rover" 4 times.(Œº¯Ý
+]squid:S2142W"FEither re-interrupt this method or rethrow the "InterruptedException".(üŸ´Â
+V"squid:SwitchLastCaseIsDefaultCheck…""Add a default case to this switch.(Ò“ÿšùÿÿÿÿ
+‰squid:S1845""mRename field "preferences" to prevent any misunderstanding/clash with field "PREFERENCES" defined on line 32.(„€Àóûÿÿÿÿ
+Ksquid:S1905w"/Remove this unnecessary cast to "DrawerLayout".(ÐÍè¨þÿÿÿÿ
+Rsquid:S2696V"6Make the enclosing method "static" or remove this set.(Àý˜êüÿÿÿÿ
+?squid:S1148X"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+Lsquid:S1905š"/Remove this unnecessary cast to "DrawerLayout".(ÐÍè¨þÿÿÿÿ
+Qsquid:S2209J"5Change this instance-reference to a static reference.(Þ°Úˆüÿÿÿÿ

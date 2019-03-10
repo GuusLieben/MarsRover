@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,12 +16,16 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.Arrays;
+
 public class PhotoView extends AppCompatActivity {
 
     private ImageView photoImageView;
     private TextView photoTextView;
     private ImageButton photoShareButton;
     private Intent intent;
+
+    private final String logClass = this.getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +71,12 @@ public class PhotoView extends AppCompatActivity {
 
             @Override
             public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                Log.e(logClass, Arrays.toString(e.getStackTrace()));
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
+                Log.e(logClass, String.format("Preparing : %s", placeHolderDrawable.toString()));
             }
         }));
         ;

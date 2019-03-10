@@ -1,0 +1,8 @@
+
+˜squid:S1186H"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¾’‘Â
+qsquid:S1450"URemove the "intent" field and declare it as a local variable in the relevant methods.(–Ô¼ùÿÿÿÿ
+ssquid:S1450"\Remove the "photoTextView" field and declare it as a local variable in the relevant methods.(¼¶ï­
+{squid:S1450"_Remove the "photoShareButton" field and declare it as a local variable in the relevant methods.(„şˆÿÿÿÿÿ
+ysquid:S1450"]Remove the "photoImageView" field and declare it as a local variable in the relevant methods.(—šíËÿÿÿÿÿ
+Ksquid:EmptyStatementUsageCheckK"Remove this empty statement.(Åñ­õşÿÿÿÿ
+—squid:S1186D"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(„ìÒ'

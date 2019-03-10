@@ -1,12 +1,13 @@
 package com.exludit.marsrover.async;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.exludit.marsrover.RoverActivity;
-import com.exludit.marsrover.objects.RoverObject;
+import com.exludit.marsrover.objects.Rover;
 import com.exludit.marsrover.objects.RoverPhoto;
 
 import org.json.JSONArray;
@@ -18,56 +19,59 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Objects;
 
-public class ApiCollector extends AsyncTask<TaskTypes, Void, RoverObject[]> {
+public class ApiCollector extends AsyncTask<TaskTypes, Void, Rover[]> {
 
-    private static final String manifestUriString = "https://api.nasa.gov/mars-photos/api/v1/manifests/ROVERNAME?api_key=APIKEY";
+    private static final String MANIFEST_URI_STRING = "https://api.nasa.gov/mars-photos/api/v1/manifests/ROVERNAME?api_key=APIKEY";
 
-    private static final String photoUriString = "https://api.nasa.gov/mars-photos/api/v1/rovers/ROVERNAME/photos?sol=SOLDAY&api_key=APIKEY";
-    private static final String key = "vwBFh1zxgp0ymckxjl6axXihk7EVQIFb91ChbZv7";
+    private static final String PHOTO_URI_STRING = "https://api.nasa.gov/mars-photos/api/v1/rovers/ROVERNAME/photos?sol=SOLDAY&api_key=APIKEY";
+    private static final String API_KEY = "vwBFh1zxgp0ymckxjl6axXihk7EVQIFb91ChbZv7";
 
     private final String logClass = this.getClass().getName();
 
-    private static RoverObject[] rovers = null;
+    private static Rover[] rovers = null;
 
+    @SuppressLint("StaticFieldLeak")
     private RoverActivity context;
-    private RoverObject rover;
+    private Rover rover;
 
-    public ApiCollector(Context context, RoverObject rover) {
+    public ApiCollector(Context context, Rover rover) {
         this.context = (RoverActivity) context;
         this.rover = rover;
     }
 
     @Override
     @Nullable
-    protected RoverObject[] doInBackground(TaskTypes... taskTypes) {
+    protected Rover[] doInBackground(TaskTypes... taskTypes) {
         if (rover == null && taskTypes[0] == TaskTypes.ROVERS) {
             rovers = constructRoverObjects();
-        } else if (rover.getPhotos().size() == 0 && taskTypes[0] == TaskTypes.PHOTOS) {
-            if (rover.getPhotos().size() == 0) collectPhotosFor(rover);
+        } else if (Objects.requireNonNull(rover).getPhotos().isEmpty() && taskTypes[0] == TaskTypes.PHOTOS) {
+            collectPhotosFor(rover);
         }
         return rovers;
     }
 
-    public static RoverObject[] getRovers() {
+    private Rover[] getRovers() {
         // Rovers and cameras defined on https://api.nasa.gov/api.html#MarsPhotos
-        RoverObject curiosity = new RoverObject("curiosity", new String[]{"FHAZ", "RHAZ", "MAST", "CHEMCAM", "MAHLI", "MARDI", "NAVCAM"});
-        RoverObject opportunity = new RoverObject("opportunity", new String[]{"FHAZ", "RHAZ", "NAVCAM", "PANCAM", "MINITES"});
-        RoverObject spirit = new RoverObject("spirit", new String[]{"FHAZ", "RHAZ", "NAVCAM", "PANCAM", "MINITES"});
+        if (rovers == null) {
+            Rover curiosity = new Rover("curiosity", new String[]{"CHEMCAM", "FHAZ", "MAHLI", "MARDI", "MAST", "NAVCAM", "RHAZ"});
+            Rover opportunity = new Rover("opportunity", new String[]{"FHAZ", "MINITES", "NAVCAM", "PANCAM", "RHAZ"});
+            Rover spirit = new Rover("spirit", new String[]{"FHAZ", "MINITES", "NAVCAM", "PANCAM", "RHAZ"});
 
-        rovers = new RoverObject[]{curiosity, opportunity, spirit};
-
+            rovers = new Rover[]{curiosity, opportunity, spirit};
+        }
         return rovers;
     }
 
-    private RoverObject[] constructRoverObjects() {
-        for (RoverObject rover : getRovers()) {
+    private Rover[] constructRoverObjects() {
+        for (Rover roverNoMaxSol : getRovers()) {
             // Get data from it
             try {
-                int max_sol = getJSONObjectFromUrl(manifestUriString, rover.getName(), 0)
+                int maxSol = getJSONObjectFromUrl(MANIFEST_URI_STRING, roverNoMaxSol.getName(), 0)
                         .getJSONObject("photo_manifest")
                         .getInt("max_sol");
-                rover.setMaxSol(max_sol);
+                roverNoMaxSol.setMaxSol(maxSol);
             } catch (JSONException e) {
                 Log.e(logClass, e.getMessage());
             }
@@ -76,11 +80,11 @@ public class ApiCollector extends AsyncTask<TaskTypes, Void, RoverObject[]> {
         return rovers;
     }
 
-    private void collectPhotosFor(RoverObject roverObject) {
+    private void collectPhotosFor(Rover rover) {
         try {
             JSONObject photoList = getJSONObjectFromUrl(
-                    photoUriString,
-                    roverObject.getName(),
+                    PHOTO_URI_STRING,
+                    rover.getName(),
                     1500);
 
             Log.i(logClass, photoList.toString());
@@ -94,20 +98,20 @@ public class ApiCollector extends AsyncTask<TaskTypes, Void, RoverObject[]> {
                 String fullCameraName = photo.getJSONObject("camera").getString("full_name");
                 int sol = 1500;
                 String earthDate = photo.getString("earth_date");
-                String img_src = photo.getString("img_src");
+                String imgSrc = photo.getString("img_src");
 
-                RoverPhoto roverPhoto = new RoverPhoto(id, cameraName, fullCameraName, sol, earthDate, img_src);
+                RoverPhoto roverPhoto = new RoverPhoto(id, cameraName, fullCameraName, sol, earthDate, imgSrc);
                 Log.i(logClass, String.format("Successfully created new RoverPhoto : %s", roverPhoto.toString()));
-                roverObject.addPhoto(roverPhoto);
+                rover.addPhoto(roverPhoto);
 
-                context.runOnUiThread(() -> context.getRecyclerAdapter().swapItems(roverObject.getPhotos()));
+                context.runOnUiThread(() -> context.getRecyclerAdapter().swapItems(rover.getPhotos()));
 
             }
         } catch (JSONException e) {
             Log.e(logClass, e.getMessage());
             for (StackTraceElement el : e.getStackTrace()) Log.e(logClass, el.toString());
         }
-        context.runOnUiThread(() -> context.showToastResults(String.format("Loaded %s photos for %s", roverObject.getPhotos().size(), roverObject.getName())));
+        context.runOnUiThread(() -> context.showToastResults(String.format("Loaded %s photos for %s", rover.getPhotos().size(), rover.getName())));
     }
 
     private JSONObject getJSONObjectFromUrl(String uri, String rovername, int sol) {
@@ -117,7 +121,7 @@ public class ApiCollector extends AsyncTask<TaskTypes, Void, RoverObject[]> {
             String fullUri = uri
                     .replace("ROVERNAME", rovername)
                     .replace("SOLDAY", String.valueOf(sol))
-                    .replace("APIKEY", key);
+                    .replace("APIKEY", API_KEY);
 
             Log.i(logClass, fullUri);
 
@@ -127,12 +131,11 @@ public class ApiCollector extends AsyncTask<TaskTypes, Void, RoverObject[]> {
 
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) buffer.append(line);
+            while ((line = reader.readLine()) != null) stringBuilder.append(line);
 
-            JSONObject parent = new JSONObject(buffer.toString());
-            return parent;
+            return new JSONObject(stringBuilder.toString());
         } catch (IOException | JSONException e) {
             Log.e(logClass, e.getMessage());
             for (StackTraceElement el : e.getStackTrace()) Log.e(logClass, el.toString());
