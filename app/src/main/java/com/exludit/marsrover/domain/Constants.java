@@ -10,6 +10,9 @@ import com.exludit.marsrover.async.RoverConstruction;
 
 public class Constants {
 
+    private Constants() {
+    }
+
     // Photo API url Strings //
     public static final String CURIOSITY_PHOTO_URL = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos";
     public static final String OPPORTUNITY_PHOTO_URL = "https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/photos";
@@ -48,4 +51,16 @@ public class Constants {
     public static final String PREFERENCES = "MarsRoverPreferences";
     public static final String TYPE_ROVER = "$ROVER";
     public static final String TYPE_PHOTOS = "$PHOTOS";
+    public static final String BUNDLE_ROVERNAME = Constants.BUNDLE_ROVERNAME;
+
+    // Camera names //
+    public static final String FHAZ = "Front Hazard Avoidance Camera";
+    public static final String RHAZ = "Rear Hazard Avoidance Camera";
+    public static final String MAST = "Mast Camera";
+    public static final String CHEMCAM = "Chemistry and Camera Complex";
+    public static final String MAHLI = "Mars Hand Lens Imager";
+    public static final String MARDI = "Mars Descent Imager";
+    public static final String NAVCAM = "Navigation Camera";
+    public static final String PANCAM = "Panoramic Camera";
+    public static final String MINITES = "Miniature Thermal Emission Spectrometer (Mini-TES)";
 }

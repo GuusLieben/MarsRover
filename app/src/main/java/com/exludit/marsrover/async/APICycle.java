@@ -31,14 +31,10 @@ public class APICycle extends AsyncTaskLoader<Rover[]> {
 
         Log.d(Constants.API_CYCLE_TAG, "Generating new API Cycle");
 
-        this.rover = Rover.getByName(bundle.getString("roverName"));
+        this.rover = Rover.getByName(bundle.getString(Constants.BUNDLE_ROVERNAME));
         this.type = bundle.getString("type");
 
-        switch (bundle.getString("roverName").toLowerCase()) {
-            case "curiosity":
-                manifestUri = Constants.CURIOSITY_MANIFEST_URL;
-                photoUri = Constants.CURIOSITY_PHOTO_URL;
-                break;
+        switch (Objects.requireNonNull(bundle.getString(Constants.BUNDLE_ROVERNAME)).toLowerCase()) {
             case "opportunity":
                 manifestUri = Constants.OPPORTUNITY_MANIFEST_URL;
                 photoUri = Constants.OPPORTUNITY_PHOTO_URL;
@@ -47,9 +43,16 @@ public class APICycle extends AsyncTaskLoader<Rover[]> {
                 manifestUri = Constants.SPIRIT_MANIFEST_URL;
                 photoUri = Constants.SPIRIT_PHOTO_URL;
                 break;
+            default: // In case of Curiosity or invalid name
+                manifestUri = Constants.CURIOSITY_MANIFEST_URL;
+                photoUri = Constants.CURIOSITY_PHOTO_URL;
+                break;
         }
 
-        Log.d(Constants.API_CYCLE_TAG, String.format("Generated new resources for %s :%n\tManifest : %s%n\tPhotos : %s", bundle.getString("roverName"), manifestUri, photoUri));
+        Log.d(Constants.API_CYCLE_TAG, String.format("Generated new resources for %s :%n\tManifest : %s%n\tPhotos : %s",
+                bundle.getString(Constants.BUNDLE_ROVERNAME),
+                manifestUri,
+                photoUri));
     }
 
     @Override

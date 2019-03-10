@@ -11,4 +11,13 @@
     <string name="settings_information"><![CDATA[Settings & Information]]></string>
     <string name="full_detail_image_album">Image ID : %s%nRover : %s%nSol : %s%nDate : %s%nCamera : %s</string>
     <string name="single_image_album">Image ID : %s</string>
+    <string name="rover_opportunity">Opportunity</string>
+    <string name="rover_spirit">Spirit</string>
+    <string name="rovers">Rovers</string>
+    <string name="pref_rover_title">Preferred Rover</string>
+    <string name="pref_language_title">Preferred Language</string>
+    <string name="language_nl">Nederlands (nl_NL)</string>
+    <string name="language_enus">English (en_US)</string>
+    <string name="about_title">About</string>
+    <string name="about_text_desc">This app is shit imo tbh af</string>
 </resources>

@@ -44,7 +44,6 @@ public class RoverActivity
     private RecyclerView.LayoutManager layoutManager;
 
     private static Rover[] rovers;
-    private static final String PREFERENCES = "MarsRoverPreferences";
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
 
@@ -66,8 +65,8 @@ public class RoverActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         Log.d(logClass, "Successfully obtained navigation Views");
 
-        editor = getSharedPreferences(PREFERENCES, MODE_PRIVATE).edit();
-        preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+        editor = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE).edit();
+        preferences = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
         Log.d(logClass, "Successfully obtained SharePreferences");
 
         setSupportActionBar(toolbar);
@@ -106,7 +105,7 @@ public class RoverActivity
     private void collectRovers(String roverName) {
         if (rovers == null) {
             Bundle bundle = new Bundle();
-            bundle.putString("roverName", roverName);
+            bundle.putString(Constants.BUNDLE_ROVERNAME, roverName);
             bundle.putString("type", Constants.TYPE_ROVER);
 
             getSupportLoaderManager().initLoader(10, bundle, this);
@@ -118,7 +117,7 @@ public class RoverActivity
         Rover rover = Rover.getByName(currentRoverObjectName);
         if (rover != null) {
             Bundle bundle = new Bundle();
-            bundle.putString("roverName", currentRoverObjectName);
+            bundle.putString(Constants.BUNDLE_ROVERNAME, currentRoverObjectName);
             bundle.putString("type", Constants.TYPE_PHOTOS);
             getSupportLoaderManager().initLoader(20, bundle, this);
 
@@ -161,15 +160,16 @@ public class RoverActivity
                 switchCollection(getString(R.string.rover_curiosity));
                 break;
             case R.id.nav_opportunity:
-                switchCollection("Opportunity");
+                switchCollection(getString(R.string.rover_opportunity));
                 break;
             case R.id.nav_spirit:
-                switchCollection("Spirit");
+                switchCollection(getString(R.string.rover_spirit));
                 break;
             case R.id.nav_settings:
                 Intent settingsIntent = new Intent(this,
                         Settings.class);
                 startActivity(settingsIntent);
+                break;
             default:
                 switchCollection(getString(R.string.rover_curiosity));
                 break;
@@ -187,7 +187,7 @@ public class RoverActivity
         editor.putString(getString(R.string.preffered_rover_key), roverName);
         editor.apply();
         Bundle bundle = new Bundle();
-        bundle.putString("roverName", roverName);
+        bundle.putString(Constants.BUNDLE_ROVERNAME, roverName);
         bundle.putString("type", Constants.TYPE_PHOTOS);
         getSupportLoaderManager().restartLoader(20, bundle, this);
     }
@@ -195,7 +195,7 @@ public class RoverActivity
     @NonNull
     @Override
     public Loader<Rover[]> onCreateLoader(int i, @Nullable Bundle bundle) {
-        APICycle cycle = new APICycle(this, bundle);
+        APICycle cycle = new APICycle(this, Objects.requireNonNull(bundle));
         cycle.setListener(this);
         return cycle;
     }
@@ -223,5 +223,9 @@ public class RoverActivity
         Log.d(Constants.MAINACTIVITY_LOG_TAG, "Hiding progressbar and showing results");
         loadingIndicator.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
+        showToastResults(String.format("Loaded %s of %s photos for %s",
+                ((RoverAdapter) mAdapter).getDisplayedItems(),
+                ((RoverAdapter) mAdapter).getDataSet().size(),
+                ((RoverAdapter) mAdapter).getRoverName()));
     }
 }

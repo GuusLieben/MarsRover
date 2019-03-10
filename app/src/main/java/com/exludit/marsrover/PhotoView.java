@@ -46,7 +46,7 @@ public class PhotoView extends AppCompatActivity {
         String photoJson = intent.getStringExtra("photo");
         RoverPhoto photo = new Gson().fromJson(photoJson, RoverPhoto.class);
 
-        String roverName = intent.getStringExtra("roverName");
+        String roverName = intent.getStringExtra(Constants.BUNDLE_ROVERNAME);
 
         photoTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         photoTextView.setText(String.format(
@@ -88,7 +88,6 @@ public class PhotoView extends AppCompatActivity {
                 Log.e(logClass, String.format("Preparing : %s", placeHolderDrawable.toString()));
             }
         }));
-        ;
     }
 
     @Override

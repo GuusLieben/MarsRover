@@ -13,6 +13,9 @@ import org.json.JSONObject;
 
 public class PhotoConstruction {
 
+    private PhotoConstruction() {
+    }
+
     static void collectPhotosFor(Rover rover, String photoUri, RoverActivity context) {
         try {
             JSONObject photoList = JSONUtils.getJSONObjectFromUrl(photoUri);
@@ -39,9 +42,9 @@ public class PhotoConstruction {
             }
         } catch (JSONException e) {
             Log.e(Constants.PHOTO_CONST_TAG, e.getMessage());
-            for (StackTraceElement el : e.getStackTrace()) Log.e(Constants.PHOTO_CONST_TAG, el.toString());
+            for (StackTraceElement el : e.getStackTrace())
+                Log.e(Constants.PHOTO_CONST_TAG, el.toString());
         }
-        context.runOnUiThread(() -> context.showToastResults(String.format("Loaded %s photos for %s", rover.getPhotos().size(), rover.getName())));
     }
-    
+
 }

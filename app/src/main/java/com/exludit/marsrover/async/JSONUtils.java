@@ -16,6 +16,9 @@ import java.net.URLConnection;
 
 public class JSONUtils {
 
+    private JSONUtils() {
+    }
+
     static JSONObject getJSONObjectFromUrl(String uri) {
         URLConnection connection;
         BufferedReader reader = null;

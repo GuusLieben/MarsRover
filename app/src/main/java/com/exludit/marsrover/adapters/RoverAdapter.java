@@ -27,6 +27,7 @@ public class RoverAdapter extends RecyclerView.Adapter<RoverAdapter.RoverPhotoHo
     private String roverName;
     private boolean rotationIsLandscape;
     private List<RoverPhoto> dataSet = new ArrayList<>();
+    private int displayedItems = 0;
 
     public void setRoverName(String roverName) {
         this.roverName = roverName;
@@ -78,13 +79,26 @@ public class RoverAdapter extends RecyclerView.Adapter<RoverAdapter.RoverPhotoHo
             String photoJson = (new Gson().toJson(photo));
             imageIntent.putExtra("photo", photoJson);
 
-            imageIntent.putExtra("roverName", roverName);
+            imageIntent.putExtra(Constants.BUNDLE_ROVERNAME, roverName);
 
             roverPhotoHolder.itemView.getContext().startActivity(imageIntent);
         });
 
         Picasso.get().load(dataSet.get(position).getImageUri()).into(roverPhotoHolder.photoImageView);
         Log.d(Constants.ADAPTER_LOG_TAG, "Picasso loaded image from Uri into View");
+        displayedItems++;
+    }
+
+    public int getDisplayedItems() {
+        return displayedItems;
+    }
+
+    public List<RoverPhoto> getDataSet() {
+        return dataSet;
+    }
+
+    public String getRoverName() {
+        return roverName;
     }
 
     static class RoverPhotoHolder extends RecyclerView.ViewHolder {

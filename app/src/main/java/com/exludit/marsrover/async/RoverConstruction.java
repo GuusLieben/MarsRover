@@ -11,12 +11,15 @@ import java.util.Arrays;
 
 public class RoverConstruction {
 
+    private RoverConstruction() {
+    }
+
     static Rover[] fillRovers(Rover[] rovers) {
         // Rovers and cameras defined on https://api.nasa.gov/api.html#MarsPhotos
         if (rovers == null) {
-            Rover curiosity = new Rover("curiosity", new String[]{"CHEMCAM", "FHAZ", "MAHLI", "MARDI", "MAST", "NAVCAM", "RHAZ"});
-            Rover opportunity = new Rover("opportunity", new String[]{"FHAZ", "MINITES", "NAVCAM", "PANCAM", "RHAZ"});
-            Rover spirit = new Rover("spirit", new String[]{"FHAZ", "MINITES", "NAVCAM", "PANCAM", "RHAZ"});
+            Rover curiosity = new Rover("curiosity", new String[]{Constants.FHAZ, Constants.RHAZ, Constants.MAST, Constants.CHEMCAM, Constants.MAHLI, Constants.MARDI, Constants.NAVCAM});
+            Rover opportunity = new Rover("opportunity", new String[]{Constants.FHAZ, Constants.RHAZ, Constants.NAVCAM, Constants.PANCAM, Constants.MINITES});
+            Rover spirit = new Rover("spirit", new String[]{Constants.FHAZ, Constants.RHAZ, Constants.NAVCAM, Constants.PANCAM, Constants.MINITES});
 
 
             rovers = new Rover[]{curiosity, opportunity, spirit};
