@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.exludit.marsrover.PhotoView;
 import com.exludit.marsrover.R;
-import com.exludit.marsrover.objects.RoverPhoto;
+import com.exludit.marsrover.domain.RoverPhoto;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 

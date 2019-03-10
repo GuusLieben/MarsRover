@@ -5,7 +5,10 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,17 +19,24 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.exludit.marsrover.adapters.RoverAdapter;
-import com.exludit.marsrover.async.ApiCollector;
-import com.exludit.marsrover.async.TaskTypes;
-import com.exludit.marsrover.objects.Rover;
+import com.exludit.marsrover.async.APICycle;
+import com.exludit.marsrover.domain.Constants;
+import com.exludit.marsrover.domain.Rover;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
-public class RoverActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class RoverActivity
+        extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+        LoaderManager.LoaderCallbacks<Rover[]>,
+        APICycle.LoaderListener {
+
+    private ProgressBar loadingIndicator;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -45,6 +55,8 @@ public class RoverActivity extends AppCompatActivity implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        loadingIndicator = findViewById(R.id.loading_indicator);
+
         recyclerView = findViewById(R.id.main_recycler);
         Log.d(logClass, "Content view and RecyclerView loaded");
 
@@ -56,7 +68,7 @@ public class RoverActivity extends AppCompatActivity implements NavigationView.O
         editor = getSharedPreferences(PREFERENCES, MODE_PRIVATE).edit();
         preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         Log.d(logClass, "Successfully obtained SharePreferences");
-        
+
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -68,8 +80,7 @@ public class RoverActivity extends AppCompatActivity implements NavigationView.O
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Log.d(logClass, "Detected landscape orientation, setting GridLayoutManager (spanCount : 2)");
             layoutManager = new GridLayoutManager(this, 2);
-        }
-        else {
+        } else {
             Log.d(logClass, "Detected portrait orientation, setting LinearLayoutManager");
             layoutManager = new LinearLayoutManager(this);
         }
@@ -85,35 +96,37 @@ public class RoverActivity extends AppCompatActivity implements NavigationView.O
     public void onResume() {
         super.onResume();
         String roverName = preferences.getString(getString(R.string.preffered_rover_key), getString(R.string.rover_curiosity));
-        collectRovers();
+        collectRovers(roverName);
         setTitle(String.format("MarsRover - %s", roverName));
         collectPhotos(roverName);
     }
 
-    private void collectRovers() {
+    @SuppressWarnings("deprecation")
+    private void collectRovers(String roverName) {
         if (rovers == null) {
-            ApiCollector api = new ApiCollector(this, null);
-            api.execute(TaskTypes.ROVERS);
-            try {
-                rovers = api.get();
-            } catch (InterruptedException | ExecutionException e) {
-                Log.e(logClass, e.getMessage());
-            }
+            Bundle bundle = new Bundle();
+            bundle.putString("roverName", roverName);
+            bundle.putString("type", Constants.TYPE_ROVER);
+
+            getSupportLoaderManager().initLoader(10, bundle, this);
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void collectPhotos(String currentRoverObjectName) {
         Rover rover = Rover.getByName(currentRoverObjectName);
         if (rover != null) {
-            ApiCollector api = new ApiCollector(this, rover);
+            Bundle bundle = new Bundle();
+            bundle.putString("roverName", currentRoverObjectName);
+            bundle.putString("type", Constants.TYPE_PHOTOS);
+            getSupportLoaderManager().initLoader(20, bundle, this);
 
-            api.execute(TaskTypes.PHOTOS);
             recyclerView.setAdapter(mAdapter);
             ((RoverAdapter) mAdapter).setRoverName(rover.getName());
 
             ((RoverAdapter) Objects.requireNonNull(recyclerView.getAdapter())).swapItems(rover.getPhotos());
         } else {
-            collectRovers();
+            collectRovers(currentRoverObjectName);
             collectPhotos(currentRoverObjectName);
         }
     }
@@ -162,10 +175,48 @@ public class RoverActivity extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     private void switchCollection(String roverName) {
         collectPhotos(roverName.toLowerCase());
         setTitle(String.format("MarsRover - %s", roverName));
         editor.putString(getString(R.string.preffered_rover_key), roverName);
         editor.apply();
+        Bundle bundle = new Bundle();
+        bundle.putString("roverName", roverName);
+        bundle.putString("type", Constants.TYPE_PHOTOS);
+        getSupportLoaderManager().restartLoader(20, bundle, this);
+    }
+
+    @NonNull
+    @Override
+    public Loader<Rover[]> onCreateLoader(int i, @Nullable Bundle bundle) {
+        APICycle cycle = new APICycle(this, bundle);
+        cycle.setListener(this);
+        return cycle;
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Rover[]> loader, Rover[] obtainedRovers) {
+        rovers = obtainedRovers;
+        hideProgressBar();
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Rover[]> loader) {
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Loader was reset");
+    }
+
+    @Override
+    public void showProgressBar() {
+        loadingIndicator.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Now showing the response");
+
+        loadingIndicator.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 }

@@ -1,4 +1,4 @@
-package com.exludit.marsrover.objects;
+package com.exludit.marsrover.domain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class Rover {
             if (object.getName().equalsIgnoreCase(roverObjectName)) return object;
             i++;
         }
-        return rovers.get(0);
+        return null;
     }
 
     public String getName() {

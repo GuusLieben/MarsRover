@@ -1,4 +1,4 @@
-package com.exludit.marsrover.objects;
+package com.exludit.marsrover.domain;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;

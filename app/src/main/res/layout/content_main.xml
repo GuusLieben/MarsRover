@@ -9,11 +9,23 @@
     tools:showIn="@layout/app_bar_main">
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_recycler"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:background="@android:color/black"/>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:scrollbars="vertical" />
+
+        <ProgressBar
+            android:id="@+id/loading_indicator"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
