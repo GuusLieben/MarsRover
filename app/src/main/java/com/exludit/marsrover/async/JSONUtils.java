@@ -20,12 +20,13 @@ public class JSONUtils {
         URLConnection connection;
         BufferedReader reader = null;
         try {
+            Log.d(Constants.JSON_UTILS_TAG, String.format("Attempting to parse %s", uri));
             Uri builtUri = Uri.parse(uri).buildUpon()
                     .appendQueryParameter(Constants.PARAM_SOL, String.valueOf(Constants.VALUE_SOL))
                     .appendQueryParameter(Constants.PARAM_KEY, Constants.VALUE_KEY)
                     .build();
 
-            Log.i(Constants.JSON_UTILS_TAG, builtUri.toString());
+            Log.d(Constants.JSON_UTILS_TAG, String.format("Successfully parsed Uri to : %s", builtUri.toString()));
 
             URL url = new URL(builtUri.toString());
             connection = url.openConnection();

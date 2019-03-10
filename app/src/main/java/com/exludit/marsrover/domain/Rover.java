@@ -1,5 +1,7 @@
 package com.exludit.marsrover.domain;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +22,14 @@ public class Rover {
     }
 
     public static Rover getByName(String roverObjectName) {
+        Log.i(Constants.ROVEROBJECT_LOG_TAG, String.format("Requesting Rover for name : %s", roverObjectName));
         int i = 0;
         while (i < rovers.size()) {
             Rover object = rovers.get(i);
-            if (object.getName().equalsIgnoreCase(roverObjectName)) return object;
+            if (object.getName().equalsIgnoreCase(roverObjectName)) {
+                Log.i(Constants.ROVEROBJECT_LOG_TAG, "Found matching object, returning...");
+                return object;
+            }
             i++;
         }
         return null;

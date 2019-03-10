@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MarsRover</string>
+    <string name="navigation_drawer_close">Sluiten</string>
+    <string name="navigation_drawer_open">Openen</string>
+    <string name="share_message">Goedendag mijn beste komraad, bekijkt U deze plezante foto met identificatienummer #%s genomen door de %s rover eens %s</string>
+    <string name="settings_information"><![CDATA[Instellingen & Informatie]]></string>
+    <string name="full_detail_image_album">Afbeelding ID : %s%nRover : %s%nSol : %s%nDatum : %s%nCamera : %s</string>
+    <string name="single_image_album">Afbeelding ID : %s</string>
+</resources>

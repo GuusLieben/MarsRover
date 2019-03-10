@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
+import android.util.Log;
 
 import com.exludit.marsrover.RoverActivity;
 import com.exludit.marsrover.domain.Constants;
@@ -28,6 +29,8 @@ public class APICycle extends AsyncTaskLoader<Rover[]> {
         super(context);
         this.context = (RoverActivity) context;
 
+        Log.d(Constants.API_CYCLE_TAG, "Generating new API Cycle");
+
         this.rover = Rover.getByName(bundle.getString("roverName"));
         this.type = bundle.getString("type");
 
@@ -45,6 +48,8 @@ public class APICycle extends AsyncTaskLoader<Rover[]> {
                 photoUri = Constants.SPIRIT_PHOTO_URL;
                 break;
         }
+
+        Log.d(Constants.API_CYCLE_TAG, String.format("Generated new resources for %s :%n\tManifest : %s%n\tPhotos : %s", bundle.getString("roverName"), manifestUri, photoUri));
     }
 
     @Override
@@ -56,6 +61,7 @@ public class APICycle extends AsyncTaskLoader<Rover[]> {
     @Override
     @Nullable
     public Rover[] loadInBackground() {
+        Log.d(Constants.API_CYCLE_TAG, "Starting background task");
         if (rover == null && type.equals(Constants.TYPE_ROVER))
             rovers = RoverConstruction.constructRoverObjects(rovers, manifestUri);
         else if (Objects.requireNonNull(rover).getPhotos().isEmpty() && type.equals(Constants.TYPE_PHOTOS))
@@ -70,6 +76,7 @@ public class APICycle extends AsyncTaskLoader<Rover[]> {
     }
 
     public void setListener(LoaderListener listener) {
+        Log.d(Constants.API_CYCLE_TAG, "Adopted new listener");
         this.listener = listener;
     }
 }

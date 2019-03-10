@@ -1,6 +1,7 @@
 package com.exludit.marsrover;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -165,6 +166,10 @@ public class RoverActivity
             case R.id.nav_spirit:
                 switchCollection("Spirit");
                 break;
+            case R.id.nav_settings:
+                Intent settingsIntent = new Intent(this,
+                        Settings.class);
+                startActivity(settingsIntent);
             default:
                 switchCollection(getString(R.string.rover_curiosity));
                 break;
@@ -208,14 +213,14 @@ public class RoverActivity
 
     @Override
     public void showProgressBar() {
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Showing progressbar");
         loadingIndicator.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Now showing the response");
-
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Hiding progressbar and showing results");
         loadingIndicator.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
     }

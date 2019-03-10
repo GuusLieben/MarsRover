@@ -34,7 +34,7 @@ public class Constants {
     public static final String JSON_UTILS_TAG = JSONUtils.class.getCanonicalName();
     public static final String ROVER_CONST_TAG = RoverConstruction.class.getCanonicalName();
     public static final String PHOTO_CONST_TAG = PhotoConstruction.class.getCanonicalName();
-    public static final String API_COL_TAG = APICycle.class.getCanonicalName();
+    public static final String API_CYCLE_TAG = APICycle.class.getCanonicalName();
 
     // Log Tags for Objects //
     public static final String ROVEROBJECT_LOG_TAG = Rover.class.getCanonicalName();

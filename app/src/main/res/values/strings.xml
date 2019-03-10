@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">MarsRover</string>
-    <string name="title_activity_main">RoverActivity</string>
+    <string name="title_activity_main" translatable="false">RoverActivity</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
-    <string name="nav_header_title">NASA Mars Rovers</string>
-    <string name="nav_header_subtitle">Guus Lieben - 23IVT1D1</string>
-    <string name="preffered_rover_key">rover</string>
-    <string name="rover_curiosity">Curiosity</string>
+    <string name="nav_header_title" translatable="false">NASA Mars Rovers</string>
+    <string name="nav_header_subtitle" translatable="false">Guus Lieben - 23IVT1D1</string>
+    <string name="preffered_rover_key" translatable="false">rover</string>
+    <string name="rover_curiosity" translatable="false">Curiosity</string>
+    <string name="share_message">Check out image #%s from the %s rover! %s</string>
+    <string name="settings_information"><![CDATA[Settings & Information]]></string>
+    <string name="full_detail_image_album">Image ID : %s%nRover : %s%nSol : %s%nDate : %s%nCamera : %s</string>
+    <string name="single_image_album">Image ID : %s</string>
 </resources>

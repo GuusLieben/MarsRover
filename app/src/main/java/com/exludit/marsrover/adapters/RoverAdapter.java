@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.exludit.marsrover.PhotoView;
 import com.exludit.marsrover.R;
+import com.exludit.marsrover.domain.Constants;
 import com.exludit.marsrover.domain.RoverPhoto;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -33,6 +35,7 @@ public class RoverAdapter extends RecyclerView.Adapter<RoverAdapter.RoverPhotoHo
     @NonNull
     @Override
     public RoverPhotoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(Constants.ADAPTER_LOG_TAG, String.format("Creating new ViewHolder with parent : %s", parent.toString()));
         View itemLayoutView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.rover_photo, parent, false);
 
@@ -42,6 +45,7 @@ public class RoverAdapter extends RecyclerView.Adapter<RoverAdapter.RoverPhotoHo
     }
 
     public void swapItems(List<RoverPhoto> dataSet) {
+        Log.d(Constants.ADAPTER_LOG_TAG, "Swapping to new DataSet");
         this.dataSet = dataSet;
         notifyDataSetChanged();
     }
@@ -49,20 +53,23 @@ public class RoverAdapter extends RecyclerView.Adapter<RoverAdapter.RoverPhotoHo
     @Override
     public void onBindViewHolder(@NonNull RoverPhotoHolder roverPhotoHolder, int position) {
         if (rotationIsLandscape) {
+            Log.d(Constants.ADAPTER_LOG_TAG, "Inserting new Landscape ViewHolder");
             roverPhotoHolder.photoTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             roverPhotoHolder.photoTextView.setText(String.format(
-                    "Image ID : %s%nRover : %s%nSol : %s%nDate : %s%nCamera : %s",
+                    roverPhotoHolder.itemView.getContext().getString(R.string.full_detail_image_album),
                     String.valueOf(dataSet.get(position).getId()),
                     roverName,
                     String.valueOf(dataSet.get(position).getSolDay()),
                     dataSet.get(position).getEarthDate(),
                     dataSet.get(position).getFullCameraName()));
         } else {
+            Log.d(Constants.ADAPTER_LOG_TAG, "Inserting new Portrait ViewHolder");
             roverPhotoHolder.photoTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            roverPhotoHolder.photoTextView.setText(String.format("Image ID : %s", String.valueOf(dataSet.get(position).getId())));
+            roverPhotoHolder.photoTextView.setText(String.format(roverPhotoHolder.itemView.getContext().getString(R.string.single_image_album), String.valueOf(dataSet.get(position).getId())));
         }
 
         roverPhotoHolder.photoImageView.setOnClickListener(c -> {
+            Log.d(Constants.ADAPTER_LOG_TAG, "Detected click on image, generating and opening Intent");
             Intent imageIntent = new Intent(roverPhotoHolder.itemView.getContext(),
                     PhotoView.class);
 
@@ -77,6 +84,7 @@ public class RoverAdapter extends RecyclerView.Adapter<RoverAdapter.RoverPhotoHo
         });
 
         Picasso.get().load(dataSet.get(position).getImageUri()).into(roverPhotoHolder.photoImageView);
+        Log.d(Constants.ADAPTER_LOG_TAG, "Picasso loaded image from Uri into View");
     }
 
     static class RoverPhotoHolder extends RecyclerView.ViewHolder {

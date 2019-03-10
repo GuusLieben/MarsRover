@@ -1,7 +1,6 @@
 package com.exludit.marsrover.domain;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 public class RoverPhoto {
 
@@ -19,19 +18,6 @@ public class RoverPhoto {
         this.solDay = solDay;
         this.earthDate = earthDate;
         this.imageUri = imageUri;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "RoverPhoto{" +
-                "id=" + id +
-                ", cameraName='" + cameraName + '\'' +
-                ", fullCameraName='" + fullCameraName + '\'' +
-                ", solDay=" + solDay +
-                ", earthDate='" + earthDate + '\'' +
-                ", imageUri=" + imageUri +
-                '}';
     }
 
     public int getId() {
