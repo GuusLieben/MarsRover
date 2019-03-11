@@ -23,19 +23,19 @@ public class RoverConstruction {
 
 
             rovers = new Rover[]{curiosity, opportunity, spirit};
-            Log.i(Constants.ROVER_CONST_TAG, "Successfully constructed rovers : " + Arrays.toString(rovers));
+            Log.d(Constants.ROVER_CONST_TAG, "Successfully constructed rovers : " + Arrays.toString(rovers));
         }
         return rovers;
     }
 
     static Rover[] constructRoverObjects(Rover[] rovers, String manifestUriString) {
         for (Rover roverNoMaxSol : fillRovers(rovers)) {
-            Log.i(Constants.ROVER_CONST_TAG, String.format("Collecting manifest for %s", roverNoMaxSol.getName()));
+            Log.d(Constants.ROVER_CONST_TAG, String.format("Collecting manifest for %s", roverNoMaxSol.getName()));
             try {
                 int maxSol = JSONUtils.getJSONObjectFromUrl(manifestUriString)
                         .getJSONObject("photo_manifest")
                         .getInt("max_sol");
-                Log.i(Constants.ROVER_CONST_TAG, String.format("Setting maximum Sol to %d", maxSol));
+                Log.d(Constants.ROVER_CONST_TAG, String.format("Setting maximum Sol to %d", maxSol));
                 roverNoMaxSol.setMaxSol(maxSol);
             } catch (JSONException e) {
                 Log.e(Constants.ROVER_CONST_TAG, e.getMessage());

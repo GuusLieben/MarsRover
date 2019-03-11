@@ -15,12 +15,16 @@ import android.widget.TextView;
 import com.exludit.marsrover.PhotoView;
 import com.exludit.marsrover.R;
 import com.exludit.marsrover.domain.Constants;
+import com.exludit.marsrover.domain.Rover;
 import com.exludit.marsrover.domain.RoverPhoto;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RoverAdapter extends RecyclerView.Adapter<RoverAdapter.RoverPhotoHolder> {
 
@@ -60,10 +64,12 @@ public class RoverAdapter extends RecyclerView.Adapter<RoverAdapter.RoverPhotoHo
             roverPhotoHolder.photoTextView.setText(String.format(
                     roverPhotoHolder.itemView.getContext().getString(R.string.full_detail_image_album),
                     String.valueOf(dataSet.get(position).getId()),
-                    roverName,
+                    WordUtils.capitalize(roverName),
+                    Objects.requireNonNull(Rover.getByName(roverName)).getMaxSol(),
                     String.valueOf(dataSet.get(position).getSolDay()),
                     dataSet.get(position).getEarthDate(),
-                    dataSet.get(position).getFullCameraName()));
+                    dataSet.get(position).getFullCameraName(),
+                    dataSet.get(position).getCameraName()));
         } else {
             Log.d(Constants.ADAPTER_LOG_TAG, "Inserting new Portrait ViewHolder");
             roverPhotoHolder.photoTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);

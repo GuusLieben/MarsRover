@@ -9,7 +9,7 @@
     <string name="rover_curiosity" translatable="false">Curiosity</string>
     <string name="share_message">Check out image #%s from the %s rover!%n%s</string>
     <string name="settings_information"><![CDATA[Settings & Information]]></string>
-    <string name="full_detail_image_album">Image ID : %s%nRover : %s%nSol : %s%nDate : %s%nCamera : %s</string>
+    <string name="full_detail_image_album">Image ID : %s%nRover : %s (Sols : %d)%nSol : %s%nDate : %s%nCamera : %s (%s)</string>
     <string name="single_image_album">Image ID : %s</string>
     <string name="rover_opportunity" translatable="false">Opportunity</string>
     <string name="rover_spirit" translatable="false">Spirit</string>
@@ -17,5 +17,5 @@
     <string name="save_favorite">Save current as favorite Rover</string>
     <string name="switch_language">Switch language</string>
     <string name="save_toast">Saved %s as favorite Rover</string>
-    <string name="load_photo_toast">Displaying %s of %s photos for %s</string>
+    <string name="load_photo_toast">Displaying %d of %d photos for %s</string>
 </resources>

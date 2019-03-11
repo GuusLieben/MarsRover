@@ -22,12 +22,12 @@ public class Rover {
     }
 
     public static Rover getByName(String roverObjectName) {
-        Log.i(Constants.ROVEROBJECT_LOG_TAG, String.format("Requesting Rover for name : %s", roverObjectName));
+        Log.d(Constants.ROVEROBJECT_LOG_TAG, String.format("Requesting Rover for name : %s", roverObjectName));
         int i = 0;
         while (i < rovers.size()) {
             Rover object = rovers.get(i);
             if (object.getName().equalsIgnoreCase(roverObjectName)) {
-                Log.i(Constants.ROVEROBJECT_LOG_TAG, "Found matching object, returning...");
+                Log.d(Constants.ROVEROBJECT_LOG_TAG, "Found matching object, returning...");
                 return object;
             }
             i++;

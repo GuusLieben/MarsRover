@@ -20,7 +20,7 @@ public class PhotoConstruction {
         try {
             JSONObject photoList = JSONUtils.getJSONObjectFromUrl(photoUri);
 
-            Log.i(Constants.PHOTO_CONST_TAG, photoList.toString());
+            Log.d(Constants.PHOTO_CONST_TAG, photoList.toString());
 
             JSONArray photoArray = photoList.getJSONArray("photos");
 
@@ -34,7 +34,7 @@ public class PhotoConstruction {
                 String imgSrc = photo.getString("img_src");
 
                 RoverPhoto roverPhoto = new RoverPhoto(id, cameraName, fullCameraName, sol, earthDate, imgSrc);
-                Log.i(Constants.PHOTO_CONST_TAG, String.format("Successfully created new RoverPhoto : %s", roverPhoto.toString()));
+                Log.d(Constants.PHOTO_CONST_TAG, String.format("Successfully created new RoverPhoto : %s", roverPhoto.toString()));
                 rover.addPhoto(roverPhoto);
 
                 context.runOnUiThread(() -> context.getRecyclerAdapter().swapItems(rover.getPhotos()));

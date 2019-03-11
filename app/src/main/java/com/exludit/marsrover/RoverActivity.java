@@ -36,8 +36,6 @@ import com.exludit.marsrover.async.APICycle;
 import com.exludit.marsrover.domain.Constants;
 import com.exludit.marsrover.domain.Rover;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -106,6 +104,7 @@ public class RoverActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Inflating toolbar menu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_app_bar, menu);
         return true;
@@ -114,6 +113,8 @@ public class RoverActivity
     @Override
     public void onResume() {
         super.onResume();
+
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "onCreate succeeded, performing Resume actions");
         String roverName = preferences.getString(getString(R.string.preffered_rover_key), getString(R.string.rover_curiosity));
         currentRover = roverName;
         collectRovers(roverName);
@@ -124,6 +125,7 @@ public class RoverActivity
     @SuppressWarnings("deprecation")
     private void collectRovers(String roverName) {
         if (rovers == null) {
+            Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Rover doesn't exist yet, requesting API Cycle to collect %s", roverName));
             Bundle bundle = new Bundle();
             bundle.putString(Constants.BUNDLE_ROVERNAME, roverName);
             bundle.putString("type", Constants.TYPE_ROVER);
@@ -136,6 +138,7 @@ public class RoverActivity
     private void collectPhotos(String currentRoverObjectName) {
         Rover rover = Rover.getByName(currentRoverObjectName);
         if (rover != null) {
+            Log.d(Constants.MAINACTIVITY_LOG_TAG, "Rover exists, swapping Adapter Data Set");
             Bundle bundle = new Bundle();
             bundle.putString(Constants.BUNDLE_ROVERNAME, currentRoverObjectName);
             bundle.putString("type", Constants.TYPE_PHOTOS);
@@ -146,12 +149,14 @@ public class RoverActivity
 
             ((RoverAdapter) Objects.requireNonNull(recyclerView.getAdapter())).swapItems(rover.getPhotos());
         } else {
+            Log.d(Constants.MAINACTIVITY_LOG_TAG, "Rover was null, collecting all data");
             collectRovers(currentRoverObjectName);
             collectPhotos(currentRoverObjectName);
         }
     }
 
     public void showToastResults(String message) {
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Requested Toast with message : %s", message));
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
@@ -161,10 +166,14 @@ public class RoverActivity
 
     @Override
     public void onBackPressed() {
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Back button pressed... performing action");
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+            Log.d(Constants.MAINACTIVITY_LOG_TAG, "Closing navigation drawer");
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            Log.d(Constants.MAINACTIVITY_LOG_TAG, "Forwarding button press to Super");
             super.onBackPressed();
         }
     }
@@ -175,32 +184,38 @@ public class RoverActivity
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save_rover:
+                Log.d(Constants.MAINACTIVITY_LOG_TAG, "User selected Favorite Rover menu option, saving favorite rover");
                 editor.putString(getString(R.string.preffered_rover_key), currentRover);
                 editor.apply();
                 Toast.makeText(this, String.format(getString(R.string.save_toast), currentRover), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.switch_lang:
-                // custom dialog
+                Log.d(Constants.MAINACTIVITY_LOG_TAG, "User selected Language Switch menu option, displaying dialog");
                 final Dialog dialog = new Dialog(this);
                 dialog.setTitle(getString(R.string.switch_language));
                 dialog.setContentView(R.layout.lang_dialog);
-                List<String> stringList = new ArrayList<>();  // here is list
-                RadioGroup rg = (RadioGroup) dialog.findViewById(R.id.radio_group);
 
+                RadioGroup rg = dialog.findViewById(R.id.radio_group);
                 String[] languages = Constants.LANGUAGES;
+
                 for (int i = 0, languagesLength = languages.length; i < languagesLength; i++) {
                     String lang = languages[i];
                     String langCode = Constants.LANGUAGE_CODES[i];
+                    Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Constructing option %s [%s] for new Dialog option", lang, langCode));
+
                     RadioButton button = new RadioButton(this);
                     button.setText(String.format("%s. %s [%s]", i + 1, lang, langCode));
                     button.setHeight(TypedValue.COMPLEX_UNIT_SP * 50);
+
                     rg.addView(button);
                 }
 
                 rg.setOnCheckedChangeListener((group, checkedId) -> {
                     int childCount = group.getChildCount();
+                    Log.d(Constants.MAINACTIVITY_LOG_TAG, "User selected a language");
                     for (int x = 0; x < childCount; x++) {
                         RadioButton btn = (RadioButton) group.getChildAt(x);
+
                         if (btn.getId() == checkedId) {
                             Log.d(Constants.MAINACTIVITY_LOG_TAG, btn.getText().toString());
                             Resources res = getResources();
@@ -215,9 +230,11 @@ public class RoverActivity
                                     ) - 1]
                                     .split("_")[0];
 
-                            Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format(String.format("Switching to Locale %s", langCode)));
+                            Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Switching to Locale %s", langCode));
                             conf.setLocale(new Locale(langCode.toLowerCase()));
                             res.updateConfiguration(conf, dm);
+
+                            Log.d(Constants.MAINACTIVITY_LOG_TAG, "Successfully switched Locale, recreating Activity");
                             recreate();
                             switchCollection(currentRover);
                         }
@@ -237,6 +254,8 @@ public class RoverActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("User selected the %s Rover from navigation drawer", item.getTitle()));
 
         switch (id) {
             case R.id.nav_curiosity:
@@ -260,25 +279,30 @@ public class RoverActivity
 
     @SuppressWarnings("deprecation")
     private void switchCollection(String roverName) {
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Requesting collection switch for Rover : %s", roverName));
         collectPhotos(roverName.toLowerCase());
         currentRover = roverName;
         setTitle(String.format("MarsRover - %s", roverName));
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BUNDLE_ROVERNAME, roverName);
         bundle.putString("type", Constants.TYPE_PHOTOS);
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Collected attributes, restarting cycle");
         getSupportLoaderManager().restartLoader(20, bundle, this);
     }
 
     @NonNull
     @Override
     public Loader<Rover[]> onCreateLoader(int i, @Nullable Bundle bundle) {
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "New Cycle requested, creating...");
         APICycle cycle = new APICycle(this, Objects.requireNonNull(bundle));
         cycle.setListener(this);
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Successfully created Cycle and set Listener, returning...");
         return cycle;
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Rover[]> loader, Rover[] obtainedRovers) {
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Storing results in activity...");
         rovers = obtainedRovers;
         hideProgressBar();
     }
@@ -290,14 +314,14 @@ public class RoverActivity
 
     @Override
     public void showProgressBar() {
-        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Showing progressbar");
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Showing loading indicator");
         loadingIndicator.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Hiding progressbar and showing results");
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Hiding loading indicator and showing results");
         loadingIndicator.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
         showToastResults(String.format(getString(R.string.load_photo_toast),

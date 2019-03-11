@@ -12,12 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.exludit.marsrover.domain.Constants;
+import com.exludit.marsrover.domain.Rover;
 import com.exludit.marsrover.domain.RoverPhoto;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.util.Arrays;
+import java.util.Objects;
 
 public class PhotoView extends AppCompatActivity {
 
@@ -33,15 +37,15 @@ public class PhotoView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rover_photo_full);
 
-        Log.i(Constants.PHOTOVIEWINTENT_LOG_TAG, "Created Content View, assigning Views to local variables");
+        Log.d(Constants.PHOTOVIEWINTENT_LOG_TAG, "Created Content View, assigning Views to local variables");
 
         photoImageView = findViewById(R.id.photo_image);
         photoTextView = findViewById(R.id.photo_details);
         photoShareButton = findViewById(R.id.share_button);
         intent = getIntent();
 
-        Log.i(Constants.PHOTOVIEWINTENT_LOG_TAG, "Successfully assigned Views");
-        Log.i(Constants.PHOTOVIEWINTENT_LOG_TAG, "Reconstructing RoverPhoto object from Gson StringExtra");
+        Log.d(Constants.PHOTOVIEWINTENT_LOG_TAG, "Successfully assigned Views");
+        Log.d(Constants.PHOTOVIEWINTENT_LOG_TAG, "Reconstructing RoverPhoto object from Gson StringExtra");
 
         String photoJson = intent.getStringExtra("photo");
         RoverPhoto photo = new Gson().fromJson(photoJson, RoverPhoto.class);
@@ -52,14 +56,16 @@ public class PhotoView extends AppCompatActivity {
         photoTextView.setText(String.format(
                 getString(R.string.full_detail_image_album),
                 String.valueOf(photo.getId()),
-                roverName,
+                WordUtils.capitalize(roverName),
+                Objects.requireNonNull(Rover.getByName(roverName)).getMaxSol(),
                 String.valueOf(photo.getSolDay()),
                 photo.getEarthDate(),
-                photo.getFullCameraName()));
+                photo.getFullCameraName(),
+                photo.getCameraName()));
 
         Picasso.get().load(photo.getImageUri()).into(photoImageView);
 
-        Log.i(Constants.PHOTOVIEWINTENT_LOG_TAG, "Assigning onClickListeners");
+        Log.d(Constants.PHOTOVIEWINTENT_LOG_TAG, "Assigning onClickListeners");
 
         photoImageView.setOnClickListener(c -> finish());
         photoTextView.setOnClickListener(c -> finish());
@@ -67,6 +73,7 @@ public class PhotoView extends AppCompatActivity {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 Intent i = new Intent(Intent.ACTION_SEND);
+                Log.d(Constants.PHOTOVIEWINTENT_LOG_TAG, "Loaded intent, constructing share message");
                 String message = String.format(getString(R.string.share_message),
                         String.valueOf(photo.getId()),
                         roverName,
@@ -74,7 +81,7 @@ public class PhotoView extends AppCompatActivity {
 
                 i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_TEXT, message);
-                Log.i(Constants.PHOTOVIEWINTENT_LOG_TAG, "Sharing image");
+                Log.d(Constants.PHOTOVIEWINTENT_LOG_TAG, "Sharing image");
                 startActivity(Intent.createChooser(i, "Share Image"));
             }
 
