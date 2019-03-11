@@ -10,5 +10,5 @@
     <string name="save_favorite">Bewaar huidige als favoriete Rover</string>
     <string name="save_toast">%s opgeslagen als favoriete Rover</string>
     <string name="switch_language">Taal veranderen</string>
-    <string name="load_photo_toast">%d van %d foto\'s voor %s tonen</string>
+    <string name="load_photo_toast">%d van %d geladen foto\'s voor %s (van %s totaal) tonen</string>
 </resources>

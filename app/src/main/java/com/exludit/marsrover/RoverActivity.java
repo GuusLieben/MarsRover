@@ -38,6 +38,8 @@ import com.exludit.marsrover.async.APICycle;
 import com.exludit.marsrover.domain.Constants;
 import com.exludit.marsrover.domain.Rover;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.util.Locale;
 import java.util.Objects;
 
@@ -167,12 +169,14 @@ public class RoverActivity
 
     public void showToastResults() {
         if (((RoverAdapter) mAdapter).getDisplayedItems() != 0) {
+            Rover rover = Rover.getByName(currentRover);
             String message = String.format(getString(R.string.load_photo_toast),
                     ((RoverAdapter) mAdapter).getDisplayedItems(),
                     ((RoverAdapter) mAdapter).getDataSet().size(),
-                    ((RoverAdapter) mAdapter).getRoverName());
+                    WordUtils.capitalize(((RoverAdapter) mAdapter).getRoverName()),
+                    String.valueOf(Objects.requireNonNull(rover).getMaxSol()));
             Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Requested Toast with message : %s", message));
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         } else {
             Log.d(Constants.MAINACTIVITY_LOG_TAG, "Amount of loaded images is zero, not showing Toast (yet)");
         }

@@ -16,7 +16,7 @@
     <string name="save_favorite">Save current as favorite Rover</string>
     <string name="switch_language">Switch language</string>
     <string name="save_toast">Saved %s as favorite Rover</string>
-    <string name="load_photo_toast">Displaying %d of %d photos for %s</string>
+    <string name="load_photo_toast">Displaying %d of %d loaded photos for %s (of %s total)</string>
     <string name="share">Share</string>
     <string name="back">Back</string>
     <string name="photo_detail_camera">Camera : %s (%s)</string>
