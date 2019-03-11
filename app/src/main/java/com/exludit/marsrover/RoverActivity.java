@@ -2,10 +2,12 @@ package com.exludit.marsrover;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -79,6 +81,14 @@ public class RoverActivity
         preferences = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
         Log.d(logClass, "Successfully obtained SharePreferences");
 
+        Locale current = getResources().getConfiguration().locale;
+        if (!current.toLanguageTag().split("-")[0].equals(preferences.getString(Constants.LANG_PREFERENCE, "en"))) {
+            Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Detected Locale was not the preferred setting, switching from %s to %s",
+                    current.toLanguageTag().split("-")[0],
+                    preferences.getString(Constants.LANG_PREFERENCE, "something")));
+            switchLocale(preferences.getString(Constants.LANG_PREFERENCE, "en"));
+        }
+
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -115,7 +125,7 @@ public class RoverActivity
         super.onResume();
 
         Log.d(Constants.MAINACTIVITY_LOG_TAG, "onCreate succeeded, performing Resume actions");
-        String roverName = preferences.getString(getString(R.string.preffered_rover_key), getString(R.string.rover_curiosity));
+        String roverName = preferences.getString(Constants.ROVER_PREFERENCE, getString(R.string.rover_curiosity));
         currentRover = roverName;
         collectRovers(roverName);
         setTitle(String.format("MarsRover - %s", roverName));
@@ -155,9 +165,17 @@ public class RoverActivity
         }
     }
 
-    public void showToastResults(String message) {
-        Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Requested Toast with message : %s", message));
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    public void showToastResults() {
+        if (((RoverAdapter) mAdapter).getDisplayedItems() != 0) {
+            String message = String.format(getString(R.string.load_photo_toast),
+                    ((RoverAdapter) mAdapter).getDisplayedItems(),
+                    ((RoverAdapter) mAdapter).getDataSet().size(),
+                    ((RoverAdapter) mAdapter).getRoverName());
+            Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Requested Toast with message : %s", message));
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d(Constants.MAINACTIVITY_LOG_TAG, "Amount of loaded images is zero, not showing Toast (yet)");
+        }
     }
 
     public RoverAdapter getRecyclerAdapter() {
@@ -185,7 +203,7 @@ public class RoverActivity
         switch (item.getItemId()) {
             case R.id.save_rover:
                 Log.d(Constants.MAINACTIVITY_LOG_TAG, "User selected Favorite Rover menu option, saving favorite rover");
-                editor.putString(getString(R.string.preffered_rover_key), currentRover);
+                editor.putString(Constants.ROVER_PREFERENCE, currentRover);
                 editor.apply();
                 Toast.makeText(this, String.format(getString(R.string.save_toast), currentRover), Toast.LENGTH_SHORT).show();
                 break;
@@ -218,10 +236,6 @@ public class RoverActivity
 
                         if (btn.getId() == checkedId) {
                             Log.d(Constants.MAINACTIVITY_LOG_TAG, btn.getText().toString());
-                            Resources res = getResources();
-                            DisplayMetrics dm = res.getDisplayMetrics();
-                            android.content.res.Configuration conf = res.getConfiguration();
-
                             String langCode = Constants.LANGUAGE_CODES[
                                     Integer.parseInt(
                                             btn.getText()
@@ -229,14 +243,8 @@ public class RoverActivity
                                                     .split("\\.")[0]
                                     ) - 1]
                                     .split("_")[0];
-
-                            Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Switching to Locale %s", langCode));
-                            conf.setLocale(new Locale(langCode.toLowerCase()));
-                            res.updateConfiguration(conf, dm);
-
-                            Log.d(Constants.MAINACTIVITY_LOG_TAG, "Successfully switched Locale, recreating Activity");
-                            recreate();
-                            switchCollection(currentRover);
+                            dialog.cancel();
+                            switchLocale(langCode);
                         }
                     }
                 });
@@ -247,6 +255,25 @@ public class RoverActivity
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @SuppressWarnings("deprecation")
+    private void switchLocale(String langCode) {
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format("Switching to Locale %s", langCode));
+        conf.setLocale(new Locale(langCode.toLowerCase()));
+        res.updateConfiguration(conf, dm);
+
+        editor.putString(Constants.LANG_PREFERENCE, langCode);
+        editor.apply();
+
+        Log.d(Constants.MAINACTIVITY_LOG_TAG, "Successfully switched Locale, recreating Activity");
+        Intent roverMain = getIntent();
+        finish();
+        startActivity(roverMain);
+        if (currentRover != null) switchCollection(currentRover);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -324,9 +351,8 @@ public class RoverActivity
         Log.d(Constants.MAINACTIVITY_LOG_TAG, "Hiding loading indicator and showing results");
         loadingIndicator.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
-        showToastResults(String.format(getString(R.string.load_photo_toast),
-                ((RoverAdapter) mAdapter).getDisplayedItems(),
-                ((RoverAdapter) mAdapter).getDataSet().size(),
-                ((RoverAdapter) mAdapter).getRoverName()));
+        new Handler().postDelayed(
+                this::showToastResults
+                , 250);
     }
 }

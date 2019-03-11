@@ -20,9 +20,4 @@
             android:title="@string/rover_spirit" />
     </group>
 
-    <item
-        android:id="@+id/nav_settings"
-        android:icon="@android:drawable/ic_dialog_info"
-        android:title="@string/settings_information" />
-
 </menu>

@@ -5,7 +5,6 @@
     <string name="navigation_drawer_close">Close</string>
     <string name="nav_header_title" translatable="false">NASA Mars Rovers</string>
     <string name="nav_header_subtitle" translatable="false">Guus Lieben - 23IVT1D1</string>
-    <string name="preffered_rover_key" translatable="false">rover</string>
     <string name="rover_curiosity" translatable="false">Curiosity</string>
     <string name="share_message">Check out image #%s from the %s rover!%n%s</string>
     <string name="settings_information"><![CDATA[Settings & Information]]></string>
@@ -18,4 +17,7 @@
     <string name="switch_language">Switch language</string>
     <string name="save_toast">Saved %s as favorite Rover</string>
     <string name="load_photo_toast">Displaying %d of %d photos for %s</string>
+    <string name="share">Share</string>
+    <string name="back">Back</string>
+    <string name="photo_detail_camera">Camera : %s (%s)</string>
 </resources>

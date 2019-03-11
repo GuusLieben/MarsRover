@@ -47,7 +47,9 @@ public class Constants {
     public static final String MAINACTIVITY_LOG_TAG = RoverActivity.class.getCanonicalName();
 
     // Preferences //
-    public static final String PREFERENCES = "MarsRoverPreferences";
+    public static final String PREFERENCES = "%MarsRoverPreferences";
+    public static final String LANG_PREFERENCE = "%LANGUAGE_PREF";
+    public static final String ROVER_PREFERENCE = "%ROVER_PREF";
     public static final String TYPE_ROVER = "$ROVER";
     public static final String TYPE_PHOTOS = "$PHOTOS";
     public static final String BUNDLE_ROVERNAME = "$BUNDLE_ROVERNAME";

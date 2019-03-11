@@ -1,6 +1,7 @@
 package com.exludit.marsrover;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ public class PhotoView extends AppCompatActivity {
     private ImageView photoImageView;
     private TextView photoTextView;
     private ImageButton photoShareButton;
+    private ImageButton photoBackButton;
     private Intent intent;
 
     private final String logClass = this.getClass().getName();
@@ -42,6 +44,7 @@ public class PhotoView extends AppCompatActivity {
         photoImageView = findViewById(R.id.photo_image);
         photoTextView = findViewById(R.id.photo_details);
         photoShareButton = findViewById(R.id.share_button);
+        photoBackButton = findViewById(R.id.back_button);
         intent = getIntent();
 
         Log.d(Constants.PHOTOVIEWINTENT_LOG_TAG, "Successfully assigned Views");
@@ -53,28 +56,34 @@ public class PhotoView extends AppCompatActivity {
         String roverName = intent.getStringExtra(Constants.BUNDLE_ROVERNAME);
 
         photoTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        photoTextView.setText(String.format(
-                getString(R.string.full_detail_image_album),
-                String.valueOf(photo.getId()),
-                WordUtils.capitalize(roverName),
-                Objects.requireNonNull(Rover.getByName(roverName)).getMaxSol(),
-                String.valueOf(photo.getSolDay()),
-                photo.getEarthDate(),
-                photo.getFullCameraName(),
-                photo.getCameraName()));
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            photoTextView.setText(String.format(
+                    getString(R.string.full_detail_image_album),
+                    String.valueOf(photo.getId()),
+                    WordUtils.capitalize(roverName),
+                    Objects.requireNonNull(Rover.getByName(roverName)).getMaxSol(),
+                    String.valueOf(photo.getSolDay()),
+                    photo.getEarthDate(),
+                    photo.getFullCameraName(),
+                    photo.getCameraName()));
+        else
+            photoTextView.setText(String.format(getString(R.string.photo_detail_camera), photo.getFullCameraName(), photo.getCameraName()));
 
         Picasso.get().load(photo.getImageUri()).into(photoImageView);
 
         Log.d(Constants.PHOTOVIEWINTENT_LOG_TAG, "Assigning onClickListeners");
 
-        photoImageView.setOnClickListener(c -> finish());
-        photoTextView.setOnClickListener(c -> finish());
+        photoBackButton.setOnClickListener(c -> finish());
         photoShareButton.setOnClickListener(c -> Picasso.get().load(photo.getImageUri().toString()).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 Intent i = new Intent(Intent.ACTION_SEND);
                 Log.d(Constants.PHOTOVIEWINTENT_LOG_TAG, "Loaded intent, constructing share message");
-                String message = String.format(getString(R.string.share_message),
+
+                String message;
+
+
+                message = String.format(getString(R.string.share_message),
                         String.valueOf(photo.getId()),
                         roverName,
                         photo.getImageUri().toString());
