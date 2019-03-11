@@ -3,8 +3,12 @@
     <string name="app_name">MarsRover</string>
     <string name="navigation_drawer_close">Sluiten</string>
     <string name="navigation_drawer_open">Openen</string>
-    <string name="share_message">Goedendag mijn beste komraad, bekijkt U deze plezante foto met identificatienummer #%s genomen door de %s rover eens %s</string>
+    <string name="share_message">Bekijk afbeelding #%s van de %s rover!%n%s</string>
     <string name="settings_information"><![CDATA[Instellingen & Informatie]]></string>
     <string name="full_detail_image_album">Afbeelding ID : %s%nRover : %s%nSol : %s%nDatum : %s%nCamera : %s</string>
     <string name="single_image_album">Afbeelding ID : %s</string>
+    <string name="save_favorite">Bewaar huidige als favoriete Rover</string>
+    <string name="save_toast">%s opgeslagen als favoriete Rover</string>
+    <string name="switch_language">Taal veranderen</string>
+    <string name="load_photo_toast">%s van %s foto\'s voor %s tonen</string>
 </resources>

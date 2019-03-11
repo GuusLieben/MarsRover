@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Settings"></activity>
+        <activity android:name=".preferences.Settings" />
         <activity android:name=".PhotoView" />
         <activity android:name=".RoverActivity">
             <intent-filter>

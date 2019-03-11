@@ -49,6 +49,7 @@ public class RoverAdapter extends RecyclerView.Adapter<RoverAdapter.RoverPhotoHo
         Log.d(Constants.ADAPTER_LOG_TAG, "Swapping to new DataSet");
         this.dataSet = dataSet;
         notifyDataSetChanged();
+        displayedItems = 0;
     }
 
     @Override

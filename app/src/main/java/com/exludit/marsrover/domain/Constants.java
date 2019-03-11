@@ -41,7 +41,6 @@ public class Constants {
 
     // Log Tags for Objects //
     public static final String ROVEROBJECT_LOG_TAG = Rover.class.getCanonicalName();
-    public static final String ROVERPHOTOOBJECT_LOG_TAG = RoverPhoto.class.getCanonicalName();
 
     // Log Tags for Activities //
     public static final String PHOTOVIEWINTENT_LOG_TAG = PhotoView.class.getCanonicalName();
@@ -51,7 +50,7 @@ public class Constants {
     public static final String PREFERENCES = "MarsRoverPreferences";
     public static final String TYPE_ROVER = "$ROVER";
     public static final String TYPE_PHOTOS = "$PHOTOS";
-    public static final String BUNDLE_ROVERNAME = Constants.BUNDLE_ROVERNAME;
+    public static final String BUNDLE_ROVERNAME = "$BUNDLE_ROVERNAME";
 
     // Camera names //
     public static final String FHAZ = "Front Hazard Avoidance Camera";
@@ -63,4 +62,8 @@ public class Constants {
     public static final String NAVCAM = "Navigation Camera";
     public static final String PANCAM = "Panoramic Camera";
     public static final String MINITES = "Miniature Thermal Emission Spectrometer (Mini-TES)";
+
+    // Languages //
+    public static final String[] LANGUAGES = {"English (US)", "Nederlands"};
+    public static final String[] LANGUAGE_CODES = {"en_US", "nl_NL"};
 }

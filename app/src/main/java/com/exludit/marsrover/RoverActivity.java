@@ -1,9 +1,10 @@
 package com.exludit.marsrover;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,10 +19,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.exludit.marsrover.adapters.RoverAdapter;
@@ -29,6 +36,9 @@ import com.exludit.marsrover.async.APICycle;
 import com.exludit.marsrover.domain.Constants;
 import com.exludit.marsrover.domain.Rover;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class RoverActivity
@@ -46,6 +56,8 @@ public class RoverActivity
     private static Rover[] rovers;
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
+
+    private String currentRover;
 
     private final String logClass = this.getClass().getName();
 
@@ -93,9 +105,17 @@ public class RoverActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_app_bar, menu);
+        return true;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         String roverName = preferences.getString(getString(R.string.preffered_rover_key), getString(R.string.rover_curiosity));
+        currentRover = roverName;
         collectRovers(roverName);
         setTitle(String.format("MarsRover - %s", roverName));
         collectPhotos(roverName);
@@ -149,6 +169,69 @@ public class RoverActivity
         }
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.save_rover:
+                editor.putString(getString(R.string.preffered_rover_key), currentRover);
+                editor.apply();
+                Toast.makeText(this, String.format(getString(R.string.save_toast), currentRover), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.switch_lang:
+                // custom dialog
+                final Dialog dialog = new Dialog(this);
+                dialog.setTitle(getString(R.string.switch_language));
+                dialog.setContentView(R.layout.lang_dialog);
+                List<String> stringList = new ArrayList<>();  // here is list
+                RadioGroup rg = (RadioGroup) dialog.findViewById(R.id.radio_group);
+
+                String[] languages = Constants.LANGUAGES;
+                for (int i = 0, languagesLength = languages.length; i < languagesLength; i++) {
+                    String lang = languages[i];
+                    String langCode = Constants.LANGUAGE_CODES[i];
+                    RadioButton button = new RadioButton(this);
+                    button.setText(String.format("%s. %s [%s]", i + 1, lang, langCode));
+                    button.setHeight(TypedValue.COMPLEX_UNIT_SP * 50);
+                    rg.addView(button);
+                }
+
+                rg.setOnCheckedChangeListener((group, checkedId) -> {
+                    int childCount = group.getChildCount();
+                    for (int x = 0; x < childCount; x++) {
+                        RadioButton btn = (RadioButton) group.getChildAt(x);
+                        if (btn.getId() == checkedId) {
+                            Log.d(Constants.MAINACTIVITY_LOG_TAG, btn.getText().toString());
+                            Resources res = getResources();
+                            DisplayMetrics dm = res.getDisplayMetrics();
+                            android.content.res.Configuration conf = res.getConfiguration();
+
+                            String langCode = Constants.LANGUAGE_CODES[
+                                    Integer.parseInt(
+                                            btn.getText()
+                                                    .toString()
+                                                    .split("\\.")[0]
+                                    ) - 1]
+                                    .split("_")[0];
+
+                            Log.d(Constants.MAINACTIVITY_LOG_TAG, String.format(String.format("Switching to Locale %s", langCode)));
+                            conf.setLocale(new Locale(langCode.toLowerCase()));
+                            res.updateConfiguration(conf, dm);
+                            recreate();
+                            switchCollection(currentRover);
+                        }
+                    }
+                });
+
+                dialog.show();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -165,11 +248,6 @@ public class RoverActivity
             case R.id.nav_spirit:
                 switchCollection(getString(R.string.rover_spirit));
                 break;
-            case R.id.nav_settings:
-                Intent settingsIntent = new Intent(this,
-                        Settings.class);
-                startActivity(settingsIntent);
-                break;
             default:
                 switchCollection(getString(R.string.rover_curiosity));
                 break;
@@ -183,9 +261,8 @@ public class RoverActivity
     @SuppressWarnings("deprecation")
     private void switchCollection(String roverName) {
         collectPhotos(roverName.toLowerCase());
+        currentRover = roverName;
         setTitle(String.format("MarsRover - %s", roverName));
-        editor.putString(getString(R.string.preffered_rover_key), roverName);
-        editor.apply();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BUNDLE_ROVERNAME, roverName);
         bundle.putString("type", Constants.TYPE_PHOTOS);
@@ -223,7 +300,7 @@ public class RoverActivity
         Log.d(Constants.MAINACTIVITY_LOG_TAG, "Hiding progressbar and showing results");
         loadingIndicator.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
-        showToastResults(String.format("Loaded %s of %s photos for %s",
+        showToastResults(String.format(getString(R.string.load_photo_toast),
                 ((RoverAdapter) mAdapter).getDisplayedItems(),
                 ((RoverAdapter) mAdapter).getDataSet().size(),
                 ((RoverAdapter) mAdapter).getRoverName()));

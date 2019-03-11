@@ -7,17 +7,15 @@
     <string name="nav_header_subtitle" translatable="false">Guus Lieben - 23IVT1D1</string>
     <string name="preffered_rover_key" translatable="false">rover</string>
     <string name="rover_curiosity" translatable="false">Curiosity</string>
-    <string name="share_message">Check out image #%s from the %s rover! %s</string>
+    <string name="share_message">Check out image #%s from the %s rover!%n%s</string>
     <string name="settings_information"><![CDATA[Settings & Information]]></string>
     <string name="full_detail_image_album">Image ID : %s%nRover : %s%nSol : %s%nDate : %s%nCamera : %s</string>
     <string name="single_image_album">Image ID : %s</string>
-    <string name="rover_opportunity">Opportunity</string>
-    <string name="rover_spirit">Spirit</string>
-    <string name="rovers">Rovers</string>
-    <string name="pref_rover_title">Preferred Rover</string>
-    <string name="pref_language_title">Preferred Language</string>
-    <string name="language_nl">Nederlands (nl_NL)</string>
-    <string name="language_enus">English (en_US)</string>
-    <string name="about_title">About</string>
-    <string name="about_text_desc">This app is shit imo tbh af</string>
+    <string name="rover_opportunity" translatable="false">Opportunity</string>
+    <string name="rover_spirit" translatable="false">Spirit</string>
+    <string name="rovers" translatable="false">Rovers</string>
+    <string name="save_favorite">Save current as favorite Rover</string>
+    <string name="switch_language">Switch language</string>
+    <string name="save_toast">Saved %s as favorite Rover</string>
+    <string name="load_photo_toast">Displaying %s of %s photos for %s</string>
 </resources>

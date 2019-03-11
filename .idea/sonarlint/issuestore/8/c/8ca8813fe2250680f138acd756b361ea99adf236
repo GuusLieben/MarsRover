@@ -1,7 +1,0 @@
-
-ssquid:CallToDeprecatedMethodp"?Remove this use of "getSupportLoaderManager"; it is deprecated.(´”Øëúÿÿÿÿ8½†ÂÆ–-
-zsquid:S1450,"\Remove the "layoutManager" field and declare it as a local variable in the relevant methods.(üÉÙ¼8ô§åÅ–-
-nsquid:CallToDeprecatedMethodÁ"?Remove this use of "getSupportLoaderManager"; it is deprecated.(û‹Ÿ8«…’È–-
-ssquid:CallToDeprecatedMethod{"?Remove this use of "getSupportLoaderManager"; it is deprecated.(ÎíÏğúÿÿÿÿ8××ÎÆ–-
-hsquid:S1192m"JDefine a constant instead of duplicating this literal "roverName" 3 times.(Êô·¥8ìªıÆ–-
-squid:S18451"mRename field "preferences" to prevent any misunderstanding/clash with field "PREFERENCES" defined on line 47.(„€Àóûÿÿÿÿ8ô§åÅ–-
